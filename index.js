@@ -1,3 +1,4 @@
+require('dotenv').config();
 var Express = require("express");
 var Mongoclient = require("mongodb").MongoClient;
 var cors = require("cors");
@@ -6,13 +7,17 @@ const multer = require("multer");
 var app = Express();
 app.use(cors());
 
-var CONNECTION_STRING="mongodb+srv://chansukman279:123123123@cluster0.m4liy0i.mongodb.net/?retryWrites=true&w=majority"
-
+var CONNECTION_STRING = process.env.MONGODB_CONNECTION_STRING;
+console.log(process.env)
 var DATABASENAME = "todoappdb";
 var database;
 
 app.listen(5038,()=>{
     Mongoclient.connect(CONNECTION_STRING,(error,client)=>{
+        if (error) {
+            console.error("Error connecting to MongoDB:", error);
+            return;
+        }
         database = client.db(DATABASENAME);
         console.log("Mongo DB connection seccessful");
 
