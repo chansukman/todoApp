@@ -30,15 +30,26 @@ app.get('/api/todoapp/GetNotes',(request,response)=>{
     });
 })
 
-app.post('/api/todoapp/AddNotes',multer().none(),(request,response)=>{
-    database.collection("todocollection").count({},function(error,numOfDocs){
-        database.collection("todocollection").insertOne({
-            id:(numOfDocs+1).toString(),
-            description:request.body.newNotes
-            });
+
+const { v4: uuidv4 } = require('uuid');
+app.post('/api/todoapp/AddNotes', multer().none(), (request, response) => {
+    // Generate a random ID
+    const randomId = uuidv4();
+
+    // Insert the new note with the random id
+    database.collection("todocollection").insertOne({
+        id: randomId,
+        description: request.body.newNotes
+    }, function (err, result) {
+        if (err) {
+            response.status(500).json({ error: "Internal Server Error" });
+        } else {
             response.json("Add successfully!");
-    })
-})
+        }
+    });
+});
+
+
 
 app.delete('/api/todoapp/DeleteNotes',(request,response)=>{
     database.collection("todocollection").deleteOne({
@@ -46,3 +57,4 @@ app.delete('/api/todoapp/DeleteNotes',(request,response)=>{
     });
     response.json("Delete successfully!")
 })
+
