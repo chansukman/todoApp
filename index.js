@@ -3,9 +3,13 @@ var Express = require("express");
 var Mongoclient = require("mongodb").MongoClient;
 var cors = require("cors");
 const multer = require("multer");
+const upload = multer() // for parsing multipart/form-data
+const bodyParser = require('body-parser')
 
 var app = Express();
 app.use(cors());
+app.use(bodyParser.json()) // for parsing application/json
+// app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 var CONNECTION_STRING = process.env.MONGODB_CONNECTION_STRING;
 console.log(process.env)
@@ -48,6 +52,33 @@ app.post('/api/todoapp/AddNotes', multer().none(), (request, response) => {
         }
     });
 });
+
+
+app.put('/api/todoapp/UpdateNotes',upload.array(), (req, res) => {
+    const id = req.query.id;
+    const editedText = req.body?.editedText;
+    console.log("editedText",editedText)
+    console.log(req.body)
+    // res.json({"id":id, "body":req.body})
+    // Update the document in the collection
+    database.collection("todocollection").updateOne(
+        { id: id },
+        { $set: { description: editedText } },
+        (error, result) => {
+            if (error) {
+                console.error("Error updating document:", error);
+                res.status(500).json({ error: "error!!!!!!" });
+            } else {
+                if (result.matchedCount > 0) {
+                    res.json({ message: 'Update successful' });
+                } else {
+                    res.status(404).json({ error: 'Document not found' });
+                }
+            }
+        }
+    );
+});
+
 
 
 

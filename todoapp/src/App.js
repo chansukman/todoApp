@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
-import AddNote from './addNote';
-import TodoListDisplay from './todoListDisplay';
+import AddNote from './addNote/addNote';
+import TodoListDisplay from './todoListDisplay/todoListDisplay';
 
 const App = ()=> {
   const [notes, setNotes] = useState([]);
