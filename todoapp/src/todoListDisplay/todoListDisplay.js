@@ -84,7 +84,6 @@ const TodoListDisplay = (props) => {
           />
           <div className="topicAction">
             <button className='updateBtn' onClick={toggleDisplay}>Update Notes</button>
-            {/* onClick={() => updateClick(note.id, editedText)} */}
             <button className='deleteBtn' onClick={() => deleteClick(note.id)}>Delete Notes</button>
           </div>
         </div>
